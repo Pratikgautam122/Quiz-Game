@@ -2,6 +2,9 @@
 #include <iostream>
 #include <cstdlib>
 #include <ctime>
+#include <chrono>
+#include <algorithm>
+
 using namespace std;
 
 QuizGame::QuizGame(string playerName) : player(playerName) {
@@ -115,12 +118,12 @@ void QuizGame::playGame() {
     cout << "Each correct answer = 10 points!\n";
 
     vector<int> usedQuestions;
+    vector<double> questionTimes; // NEW: Store timing data
 
     for (int i = 0; i < 5; i++) {
         int questionIndex;
         bool alreadyUsed;
 
-        // Pick unused question
         do {
             questionIndex = getRandomQuestion();
             alreadyUsed = false;
@@ -132,14 +135,27 @@ void QuizGame::playGame() {
         usedQuestions.push_back(questionIndex);
 
         cout << "\n--- Question " << (i + 1) << " ---";
+        
+        // START TIMING
+        auto start = chrono::high_resolution_clock::now();
+        
         questions[questionIndex].display();
 
         int answer;
         cin >> answer;
+        
+        // END TIMING
+        auto end = chrono::high_resolution_clock::now();
+        auto duration = chrono::duration_cast<chrono::seconds>(end - start);
+        double timeSpent = duration.count();
+        questionTimes.push_back(timeSpent);
+
+        // SHOW TIMING RESULT
+        cout << "⏱️ Time taken: " << timeSpent << " seconds\n";
 
         if (answer < 1 || answer > 4) {
             cout << "Invalid input!\n";
-            answer = 0; // mark wrong
+            answer = 0;
         }
 
         bool correct = questions[questionIndex].checkAnswer(answer);
@@ -150,6 +166,17 @@ void QuizGame::playGame() {
 
         cout << "Current score: " << player.score << endl;
     }
+
+    // SHOW TIMING SUMMARY
+    cout << "\n=== TIMING ANALYSIS ===\n";
+    double totalTime = 0;
+    for (int i = 0; i < questionTimes.size(); i++) {
+        cout << "Question " << (i+1) << ": " << questionTimes[i] << " seconds\n";
+        totalTime += questionTimes[i];
+    }
+    cout << "Average time per question: " << totalTime/5 << " seconds\n";
+    cout << "Fastest answer: " << *min_element(questionTimes.begin(), questionTimes.end()) << " seconds\n";
+    cout << "Slowest answer: " << *max_element(questionTimes.begin(), questionTimes.end()) << " seconds\n";
 
     cout << "\n=== GAME FINISHED ===\n";
     cout << "Final score: " << player.score << "/50\n";
