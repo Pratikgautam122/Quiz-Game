@@ -1,41 +1,36 @@
 #include "Player.h"
 #include <iostream>
-#include <iomanip>
+using namespace std;
 
-Player::Player(const std::string& playerName)
-    : name(playerName), totalScore(0), totalQuestions(0), totalCorrect(0) {}
-
-void Player::updateSession(const GameSession& session) {
-    sessions.push_back(session);
-    totalScore += session.score;
-    totalQuestions += session.questionsAnswered;
-    totalCorrect += session.correctAnswers;
+Player::Player(string playerName) {
+    name = playerName;
+    score = 0;
+    totalQuestions = 0;
+    correctAnswers = 0;
 }
 
-void Player::displayStats() const {
-    std::cout << "\n" << std::string(40, '=') << "\n";
-    std::cout << "PLAYER STATISTICS\n";
-    std::cout << std::string(40, '=') << "\n";
-    std::cout << "Name: " << name << "\n";
-    std::cout << "Total Score: " << totalScore << "\n";
-    std::cout << "Total Questions: " << totalQuestions << "\n";
-    std::cout << "Correct Answers: " << totalCorrect << "\n";
-    std::cout << "Overall Accuracy: " << std::fixed << std::setprecision(1)
-              << getAccuracy() << "%\n";
-    std::cout << "Sessions Played: " << sessions.size() << "\n";
+void Player::addScore(int points) {
+    score += points;
+}
 
-    if (!sessions.empty()) {
-        int bestScore = 0;
-        for (const auto& session : sessions) {
-            if (session.score > bestScore) {
-                bestScore = session.score;
-            }
-        }
-        std::cout << "Best Session Score: " << bestScore << "\n";
+void Player::updateStats(bool isCorrect) {
+    totalQuestions++;
+    if (isCorrect) {
+        correctAnswers++;
     }
-    std::cout << std::string(40, '=') << "\n";
 }
 
-double Player::getAccuracy() const {
-    return totalQuestions > 0 ? (static_cast<double>(totalCorrect) / totalQuestions) * 100.0 : 0.0;
+void Player::showStats() {
+    cout << "\n==== PLAYER STATS ====" << endl;
+    cout << "Name: " << name << endl;
+    cout << "Score: " << score << endl;
+    cout << "Questions: " << totalQuestions << endl;
+    cout << "Correct: " << correctAnswers << endl;
+    cout << "Accuracy: " << getAccuracy() << "%" << endl;
+    cout << "======================" << endl;
+}
+
+double Player::getAccuracy() {
+    if (totalQuestions == 0) return 0.0;
+    return (double)correctAnswers / totalQuestions * 100.0;
 }

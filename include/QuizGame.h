@@ -2,20 +2,23 @@
 #define QUIZGAME_H
 
 #include "Player.h"
-#include "QuestionBank.h"
-#include "Timer.h"
+#include "Question.h"
+#include <vector>
+using namespace std;
 
 class QuizGame {
 private:
-    Player& player;
-    QuestionBank& questionBank;
+    Player player;
+    vector<Question> questions;
 
-    int calculateScore(bool correct, Difficulty diff, int timeRemaining, int streak);
+    void loadQuestions();
+    void playGame();
+    void showMenu();
+    int getRandomQuestion();
 
 public:
-    QuizGame(Player& p, QuestionBank& qb);
-
-    GameSession play(Category category, Difficulty difficulty);
+    QuizGame(string playerName);
+    void start();
 };
 
-#endif
+#endif // QUIZGAME_H

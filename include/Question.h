@@ -1,34 +1,21 @@
 #ifndef QUESTION_H
 #define QUESTION_H
 
-#include "Constants.h"
 #include <string>
 #include <vector>
+using namespace std;
 
 class Question {
-private:
-    std::string questionText;
-    std::vector<std::string> options;
-    int correctAnswer;
-    std::string explanation;
-    Difficulty difficulty;
-    Category category;
-
 public:
-    Question();
-    Question(const std::string& text, const std::vector<std::string>& opts,
-             int correct, const std::string& explain, Difficulty diff, Category cat);
+    string text;
+    vector<string> choices;
+    int correct;
+    string explanation;
 
-    bool isCorrect(int answer) const;
-    void display() const;
-    void displayResult(int playerAnswer) const;
-
-    std::string getQuestionText() const { return questionText; }
-    std::vector<std::string> getOptions() const { return options; }
-    int getCorrectAnswer() const { return correctAnswer; }
-    std::string getExplanation() const { return explanation; }
-    Difficulty getDifficulty() const { return difficulty; }
-    Category getCategory() const { return category; }
+    Question(string q, vector<string> options, int answer, string explain);
+    void display();
+    bool checkAnswer(int answer);
+    void showResult(int playerAnswer);
 };
 
-#endif
+#endif // QUESTION_H

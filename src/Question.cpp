@@ -1,40 +1,32 @@
 #include "Question.h"
 #include <iostream>
-#include <iomanip>
+using namespace std;
 
-Question::Question() : correctAnswer(0), difficulty(Difficulty::EASY), category(Category::GENERAL) {}
-
-Question::Question(const std::string& text, const std::vector<std::string>& opts,
-                  int correct, const std::string& explain, Difficulty diff, Category cat)
-    : questionText(text), options(opts), correctAnswer(correct),
-      explanation(explain), difficulty(diff), category(cat) {}
-
-bool Question::isCorrect(int answer) const {
-    return answer == correctAnswer;
+Question::Question(string q, vector<string> options, int answer, string explain) {
+    text = q;
+    choices = options;
+    correct = answer;
+    explanation = explain;
 }
 
-void Question::display() const {
-    std::cout << "\n" << std::string(50, '=') << "\n";
-    std::cout << questionText << "\n\n";
-
-    char label = 'A';
-    for (size_t i = 0; i < options.size(); i++) {
-        std::cout << label++ << ") " << options[i] << "\n";
+void Question::display() {
+    cout << "\n" << text << endl;
+    for (int i = 0; i < choices.size(); i++) {
+        cout << (i + 1) << ". " << choices[i] << endl;
     }
-    std::cout << "\n";
+    cout << "Your answer (1-" << choices.size() << "): ";
 }
 
-void Question::displayResult(int playerAnswer) const {
-    std::cout << "\n" << std::string(50, '-') << "\n";
+bool Question::checkAnswer(int answer) {
+    return answer == correct;
+}
 
-    if (playerAnswer == correctAnswer) {
-        std::cout << "CORRECT! ";
+void Question::showResult(int playerAnswer) {
+    if (playerAnswer == correct) {
+        cout << "\nCorrect!" << endl;
     } else {
-        std::cout << "INCORRECT! ";
-        std::cout << "The correct answer was " << static_cast<char>('A' + correctAnswer)
-                  << ") " << options[correctAnswer] << "\n";
+        cout << "\nWrong! Correct answer: " << correct 
+             << ". " << choices[correct-1] << endl;
     }
-
-    std::cout << "\nExplanation: " << explanation << "\n";
-    std::cout << std::string(50, '-') << "\n";
+    cout << explanation << endl;
 }

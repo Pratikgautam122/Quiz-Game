@@ -1,13 +1,21 @@
-#include "GameManager.h"
 #include <iostream>
+#include <string>
+#include "QuizGame.h"
+using namespace std;
 
 int main() {
-    std::cout << "Enter your name: ";
-    std::string playerName;
-    std::getline(std::cin, playerName);
-
-    GameManager manager(playerName);
-    manager.run();
-
+    cout << "Welcome to Simple Quiz Game!" << endl;
+    cout << "Enter your name: ";
+    
+    string name;
+    getline(cin, name);
+    
+    if (name.empty()) {
+        name = "Player";
+    }
+    
+    QuizGame game(name);
+    game.start();
+    
     return 0;
 }

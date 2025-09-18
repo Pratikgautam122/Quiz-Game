@@ -1,19 +1,13 @@
 CXX = g++
 CXXFLAGS = -std=c++17 -Wall -Iinclude
-SRC = $(wildcard src/*.cpp)
-OBJ = $(patsubst src/%.cpp,obj/%.o,$(SRC))
-TARGET = quizgame
 
-all: $(TARGET)
+SOURCES = src/main.cpp src/Question.cpp src/Player.cpp src/QuizGame.cpp
+TARGET = quiz
 
-$(TARGET): $(OBJ)
-	$(CXX) $(CXXFLAGS) -o $@ $^
-
-obj/%.o: src/%.cpp | obj
-	$(CXX) $(CXXFLAGS) -c $< -o $@
-
-obj:
-	mkdir -p obj
+$(TARGET): $(SOURCES)
+	$(CXX) $(CXXFLAGS) -o $(TARGET) $(SOURCES)
 
 clean:
-	rm -f obj/*.o $(TARGET)
+	rm -f $(TARGET)
+
+.PHONY: clean
