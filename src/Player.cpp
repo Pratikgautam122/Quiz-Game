@@ -2,7 +2,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
-#include <sys/stat.h>   // for checking if file exists
+#include <sys/stat.h>
 
 using namespace std;
 
@@ -42,13 +42,11 @@ double Player::getAccuracy() {
     return (double)correctAnswers / totalQuestions * 100.0;
 }
 
-/* ----------- NEW: save with header & append ----------- */
 void Player::saveStats(const string &filename) const {
     bool alreadyExists = fileExists(filename);
     ofstream out(filename, ios::app);
     if (!out) return;
 
-    // Write a header only once
     if (!alreadyExists) {
         out << "Name,Score,TotalQuestions,CorrectAnswers\n";
     }
@@ -56,18 +54,16 @@ void Player::saveStats(const string &filename) const {
         << totalQuestions << ',' << correctAnswers << '\n';
 }
 
-/* ----------- NEW: load player's previous line ----------- */
 void Player::loadStats(const string &filename) {
     ifstream in(filename);
     if (!in) return;
 
     string line;
-    getline(in, line); // skip header if present
+    getline(in, line); // skip header
 
     while (getline(in, line)) {
         stringstream ss(line);
-        string pname;
-        string scoreStr, tqStr, caStr;
+        string pname, scoreStr, tqStr, caStr;
 
         getline(ss, pname, ',');
         getline(ss, scoreStr, ',');
@@ -81,6 +77,4 @@ void Player::loadStats(const string &filename) {
             return;
         }
     }
-
-    
 }

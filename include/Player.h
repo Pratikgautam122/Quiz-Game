@@ -16,6 +16,8 @@ public:
     void updateStats(bool isCorrect);
     void showStats();
     double getAccuracy();
+    void saveStats(const string &filename) const;
+    void loadStats(const string &filename);
 };
 
 #endif
