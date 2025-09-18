@@ -5,6 +5,7 @@
 using namespace std;
 
 QuizGame::QuizGame(string playerName) : player(playerName) {
+    player.loadStats("player_stats.txt");  // Load previous stats
     loadQuestions();
     srand(time(0));
 }
@@ -109,9 +110,9 @@ int QuizGame::getRandomQuestion() {
 }
 
 void QuizGame::playGame() {
-    cout << "\nStarting quiz for " << player.name << "!" << endl;
-    cout << "You will answer 5 questions." << endl;
-    cout << "Each correct answer = 10 points!" << endl;
+    cout << "\nStarting quiz for " << player.name << "!\n";
+    cout << "You will answer 5 questions.\n";
+    cout << "Each correct answer = 10 points!\n";
 
     vector<int> usedQuestions;
 
@@ -119,15 +120,12 @@ void QuizGame::playGame() {
         int questionIndex;
         bool alreadyUsed;
 
-        // Get unused question
+        // Pick unused question
         do {
             questionIndex = getRandomQuestion();
             alreadyUsed = false;
-            for (int j = 0; j < usedQuestions.size(); j++) {
-                if (usedQuestions[j] == questionIndex) {
-                    alreadyUsed = true;
-                    break;
-                }
+            for (int j : usedQuestions) {
+                if (j == questionIndex) { alreadyUsed = true; break; }
             }
         } while (alreadyUsed);
 
@@ -139,61 +137,51 @@ void QuizGame::playGame() {
         int answer;
         cin >> answer;
 
-        // Check valid input
         if (answer < 1 || answer > 4) {
-            cout << "Invalid input!" << endl;
-            answer = 0; // Wrong answer
+            cout << "Invalid input!\n";
+            answer = 0; // mark wrong
         }
 
         bool correct = questions[questionIndex].checkAnswer(answer);
         questions[questionIndex].showResult(answer);
 
         player.updateStats(correct);
-        if (correct) {
-            player.addScore(10);
-        }
+        if (correct) player.addScore(10);
 
         cout << "Current score: " << player.score << endl;
     }
 
-    cout << "\n=== GAME FINISHED ===" << endl;
-    cout << "Final score: " << player.score << "/50" << endl;
+    cout << "\n=== GAME FINISHED ===\n";
+    cout << "Final score: " << player.score << "/50\n";
 
-    if (player.getAccuracy() >= 80) {
-        cout << "Excellent!" << endl;
-    } else if (player.getAccuracy() >= 60) {
-        cout << "Good job!" << endl;
-    } else {
-        cout << "Keep practicing!" << endl;
-    }
+    if (player.getAccuracy() >= 80)
+        cout << "Excellent!\n";
+    else if (player.getAccuracy() >= 60)
+        cout << "Good job!\n";
+    else
+        cout << "Keep practicing!\n";
 }
 
 void QuizGame::showMenu() {
     int choice;
     do {
-        cout << "\n=== MENU ===" << endl;
-        cout << "1. Play Game" << endl;
-        cout << "2. View Stats" << endl;
-        cout << "3. Quit" << endl;
+        cout << "\n=== MENU ===\n";
+        cout << "1. Play Game\n";
+        cout << "2. View Stats\n";
+        cout << "3. Quit\n";
         cout << "Choice: ";
         cin >> choice;
 
         switch (choice) {
-            case 1:
-                playGame();
-                break;
-            case 2:
-                player.showStats();
-                break;
-            case 3:
-                cout << "Goodbye " << player.name << "!" << endl;
-                break;
-            default:
-                cout << "Invalid choice!" << endl;
+            case 1: playGame(); break;
+            case 2: player.showStats(); break;
+            case 3: cout << "Goodbye " << player.name << "!\n"; break;
+            default: cout << "Invalid choice!\n";
         }
     } while (choice != 3);
 }
 
 void QuizGame::start() {
     showMenu();
+    player.saveStats("player_stats.txt"); // Save on exit
 }

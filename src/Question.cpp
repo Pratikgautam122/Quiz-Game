@@ -23,10 +23,10 @@ bool Question::checkAnswer(int answer) {
 
 void Question::showResult(int playerAnswer) {
     if (playerAnswer == correct) {
-        cout << "\nCorrect!" << endl;
+        cout << "\nCorrect!\n";
     } else {
-        cout << "\nWrong! Correct answer: " << correct 
-             << ". " << choices[correct-1] << endl;
+        cout << "\nWrong! Correct answer: " << correct
+             << ". " << choices[correct - 1] << endl;
     }
     cout << explanation << endl;
 }
